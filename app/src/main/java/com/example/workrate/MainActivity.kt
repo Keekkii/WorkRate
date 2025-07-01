@@ -5,6 +5,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
 
 class MainActivity : AppCompatActivity() {
 
@@ -71,6 +72,8 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.fragment_container, ProfileFragment())
                 .commit()
         }
+        val analytics = FirebaseAnalytics.getInstance(this)
+        analytics.logEvent("test_event", null)
     }
 
     private fun clearTabHighlights() {
