@@ -5,13 +5,69 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- Fragment container -->
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <!-- Main vertical content (header + fragment container) -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <!-- Custom bottom navigation bar -->
+        <!-- Top Header -->
+        <LinearLayout
+            android:id="@+id/home_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:paddingTop="32dp"
+            android:paddingBottom="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="WORKRATE"
+                    android:textStyle="bold"
+                    android:textSize="28sp"
+                    android:textColor="@color/primary"
+                    android:fontFamily="sans-serif-black" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:id="@+id/chat_icon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/union"
+                    android:contentDescription="@string/union"
+                    app:tint="@color/primary"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#E0E0E0"/>
+        </LinearLayout>
+
+        <!-- Fragment container (fills remaining space) -->
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <!-- Bottom navigation bar (fixed at the bottom) -->
     <LinearLayout
         android:id="@+id/custom_bottom_nav"
         android:layout_width="match_parent"
@@ -21,7 +77,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <!-- HOME (far left) -->
+        <!-- HOME (selected, circular background) -->
         <LinearLayout
             android:id="@+id/nav_home"
             android:layout_width="0dp"
@@ -58,7 +114,7 @@
                 android:layout_marginTop="2dp"/>
         </LinearLayout>
 
-        <!-- SEARCH (closer to center) -->
+        <!-- SEARCH -->
         <LinearLayout
             android:id="@+id/nav_search"
             android:layout_width="wrap_content"
@@ -101,7 +157,7 @@
             android:layout_width="56dp"
             android:layout_height="match_parent" />
 
-        <!-- MAP (closer to center) -->
+        <!-- MAP -->
         <LinearLayout
             android:id="@+id/nav_map"
             android:layout_width="wrap_content"
@@ -139,7 +195,7 @@
                 android:layout_marginTop="2dp"/>
         </LinearLayout>
 
-        <!-- PROFILE (far right) -->
+        <!-- PROFILE -->
         <LinearLayout
             android:id="@+id/nav_profile"
             android:layout_width="0dp"

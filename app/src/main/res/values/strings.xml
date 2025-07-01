@@ -7,5 +7,6 @@
     <string name="add_icon">Add</string>
     <string name="map_icon">Map</string>
     <string name="profile_icon">Profile</string>
+    <string name="union">Messages</string>
 
 </resources>
