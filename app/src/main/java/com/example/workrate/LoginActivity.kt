@@ -6,86 +6,72 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.credentials.CredentialManager
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.GetCredentialResponse
-import androidx.credentials.exceptions.GetCredentialException
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import kotlinx.coroutines.launch
-import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 
 class LoginActivity : ComponentActivity() {
 
-    // Your web client ID from Google Cloud Console
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private val RC_SIGN_IN = 1001
+
+    // Replace with your actual web client ID from Google Cloud Console
     private val webClientId = "119851657498-4ptmed370cbe2b2blbihja4ege2q0p8g.apps.googleusercontent.com"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        // Configure Google Sign In
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(webClientId)
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
         val googleSignInButton = findViewById<Button>(R.id.googleSignInButton)
         googleSignInButton.setOnClickListener {
-            // Directly start Google sign-in
-            signInWithGoogle()
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
         }
     }
 
-    private fun signInWithGoogle() {
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(false) // false = allow all accounts on device
-            .setServerClientId(webClientId)
-            .build()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-
-        val credentialManager = CredentialManager.create(this)
-
-        lifecycleScope.launch {
-            try {
-                val response: GetCredentialResponse = credentialManager.getCredential(
-                    request = request,
-                    context = this@LoginActivity
-                )
-                handleSignIn(response)
-            } catch (e: GetCredentialException) {
-                Log.e("CREDENTIAL_MANAGER", "Sign-in failed", e)
-                Toast.makeText(
-                    this@LoginActivity,
-                    "Sign-in failed: ${e.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+        if (requestCode == RC_SIGN_IN) {
+            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
         }
     }
 
-    private fun handleSignIn(response: GetCredentialResponse) {
-        val credential = response.credential
-        if (credential is androidx.credentials.CustomCredential &&
-            credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
-        ) {
-            try {
-                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                val idToken = googleIdTokenCredential.idToken
-                val displayName = googleIdTokenCredential.displayName
-                val email = googleIdTokenCredential.id
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)
 
-                Log.d("CREDENTIAL_MANAGER", "ID Token: $idToken")
-                Log.d("CREDENTIAL_MANAGER", "Name: $displayName")
-                Log.d("CREDENTIAL_MANAGER", "Email: $email")
+            // You can now access the user's Google account info
+            val idToken = account.idToken
+            val email = account.email
+            val name = account.displayName
 
-                // TODO: Send idToken to backend for verification (if needed)
+            Log.d("GOOGLE_SIGN_IN", "Token: $idToken")
+            Log.d("GOOGLE_SIGN_IN", "Email: $email")
+            Log.d("GOOGLE_SIGN_IN", "Name: $name")
 
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            } catch (e: Exception) {
-                Log.e("CREDENTIAL_MANAGER", "Invalid Google ID token", e)
-            }
-        } else {
-            Log.e("CREDENTIAL_MANAGER", "Unexpected credential type: ${credential::class.java}")
+            // TODO: Send the ID token to your backend server for verification (if needed)
+
+            // Start your main activity
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+
+        } catch (e: ApiException) {
+            Log.e("GOOGLE_SIGN_IN", "Sign-in failed: ${e.statusCode}", e)
+            Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_LONG).show()
         }
     }
 }
