@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/home"
+        android:title="HOME"/>
+    <item
+        android:id="@+id/nav_search"
+        android:icon="@drawable/search"
+        android:title="SEARCH"/>
+    <item
+        android:id="@+id/nav_add"
+        android:icon="@drawable/plus_svgrepo_com"
+        android:title=""/>
+    <item
+        android:id="@+id/nav_map"
+        android:icon="@drawable/group_4"
+        android:title="MAP"/>
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/user"
+        android:title="PROFILE"/>
+</menu>

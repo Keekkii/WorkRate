@@ -1,47 +1,94 @@
 package com.example.workrate
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.workrate.ui.theme.WorkRateTheme
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var navHome: LinearLayout
+    private lateinit var navSearch: LinearLayout
+    private lateinit var navMap: LinearLayout
+    private lateinit var navProfile: LinearLayout
+    private lateinit var navAdd: ImageView
+
+    private lateinit var homeIconBg: FrameLayout
+    private lateinit var searchIconBg: FrameLayout
+    private lateinit var mapIconBg: FrameLayout
+    private lateinit var profileIconBg: FrameLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            WorkRateTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+        setContentView(R.layout.activity_home)
+
+        // Find views
+        navHome = findViewById(R.id.nav_home)
+        navSearch = findViewById(R.id.nav_search)
+        navMap = findViewById(R.id.nav_map)
+        navProfile = findViewById(R.id.nav_profile)
+        navAdd = findViewById(R.id.nav_add)
+
+        homeIconBg = findViewById(R.id.home_icon_bg)
+        searchIconBg = findViewById(R.id.search_icon_bg)
+        mapIconBg = findViewById(R.id.map_icon_bg)
+        profileIconBg = findViewById(R.id.profile_icon_bg)
+
+        // Show HomeFragment by default and highlight HOME
+        selectTab(Tab.HOME)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, HomeFragment())
+            .commit()
+
+        navHome.setOnClickListener {
+            selectTab(Tab.HOME)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, HomeFragment())
+                .commit()
+        }
+        navSearch.setOnClickListener {
+            selectTab(Tab.SEARCH)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, SearchFragment())
+                .commit()
+        }
+        navAdd.setOnClickListener {
+            clearTabHighlights()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, AddFragment())
+                .commit()
+        }
+        navMap.setOnClickListener {
+            selectTab(Tab.MAP)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, MapFragment())
+                .commit()
+        }
+        navProfile.setOnClickListener {
+            selectTab(Tab.PROFILE)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ProfileFragment())
+                .commit()
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WorkRateTheme {
-        Greeting("Android")
+    private fun clearTabHighlights() {
+        homeIconBg.setBackgroundResource(android.R.color.transparent)
+        searchIconBg.setBackgroundResource(android.R.color.transparent)
+        mapIconBg.setBackgroundResource(android.R.color.transparent)
+        profileIconBg.setBackgroundResource(android.R.color.transparent)
     }
+
+    private fun selectTab(tab: Tab) {
+        clearTabHighlights()
+        when (tab) {
+            Tab.HOME -> homeIconBg.setBackgroundResource(R.drawable.ellipse_679)
+            Tab.SEARCH -> searchIconBg.setBackgroundResource(R.drawable.ellipse_679)
+            Tab.MAP -> mapIconBg.setBackgroundResource(R.drawable.ellipse_679)
+            Tab.PROFILE -> profileIconBg.setBackgroundResource(R.drawable.ellipse_679)
+        }
+    }
+
+    enum class Tab { HOME, SEARCH, MAP, PROFILE }
 }
