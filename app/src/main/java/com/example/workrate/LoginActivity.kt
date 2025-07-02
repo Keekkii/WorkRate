@@ -3,8 +3,6 @@ package com.example.workrate
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -13,10 +11,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
 class LoginActivity : ComponentActivity() {
 
@@ -26,9 +25,27 @@ class LoginActivity : ComponentActivity() {
     // Replace with your actual web client ID from Google Cloud Console
     private val webClientId = "119851657498-4ptmed370cbe2b2blbihja4ege2q0p8g.apps.googleusercontent.com"
 
+    private lateinit var emailEditText: TextInputEditText
+    private lateinit var passwordEditText: TextInputEditText
+    private lateinit var signInButton: MaterialButton
+    private lateinit var googleSignInButton: MaterialButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        // Initialize views
+        emailEditText = findViewById(R.id.emailEditText)
+        passwordEditText = findViewById(R.id.passwordEditText)
+        signInButton = findViewById(R.id.signInButton)
+        googleSignInButton = findViewById(R.id.googleSignInButton)
+
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            // User already logged in, check profile and redirect
+            checkUserProfileExists(currentUser.uid)
+            return
+        }
 
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -38,22 +55,37 @@ class LoginActivity : ComponentActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser != null) {
-            // User already signed in, check profile
-            checkUserProfileExists(currentUser.uid)
+        // Email/Password Sign In button click
+        signInButton.setOnClickListener {
+            val email = emailEditText.text.toString().trim()
+            val password = passwordEditText.text.toString().trim()
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val user = FirebaseAuth.getInstance().currentUser
+                        if (user != null) {
+                            checkUserProfileExists(user.uid)
+                        }
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Authentication failed: ${task.exception?.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
         }
 
-        val googleSignInButton = findViewById<Button>(R.id.googleSignInButton)
+        // Google Sign In button click
         googleSignInButton.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
-        }
-
-        val createAccountLink = findViewById<TextView>(R.id.createAccountLink)
-        createAccountLink.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
         }
     }
 
@@ -62,45 +94,48 @@ class LoginActivity : ComponentActivity() {
 
         if (requestCode == RC_SIGN_IN) {
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
+            handleGoogleSignInResult(task)
         }
     }
 
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+    private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)
             val idToken = account.idToken
 
             val credential = GoogleAuthProvider.getCredential(idToken, null)
             FirebaseAuth.getInstance().signInWithCredential(credential)
-                .addOnCompleteListener(this) { task ->
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val user = FirebaseAuth.getInstance().currentUser
-
                         if (user != null) {
+                            // Save Google user data in Firestore if first time
                             val db = FirebaseFirestore.getInstance()
-                            val userMap = hashMapOf(
-                                "uid" to user.uid,
-                                "name" to user.displayName,
-                                "email" to user.email,
-                                "photoUrl" to user.photoUrl?.toString()
-                            )
-                            // Merge so existing profile data is preserved
-                            db.collection("users").document(user.uid)
-                                .set(userMap, SetOptions.merge())
-                                .addOnSuccessListener {
-                                    Log.d("Firestore", "Google user saved successfully")
+                            val userRef = db.collection("users").document(user.uid)
+                            userRef.get().addOnSuccessListener { document ->
+                                if (!document.exists()) {
+                                    val userMap = hashMapOf(
+                                        "uid" to user.uid,
+                                        "name" to user.displayName,
+                                        "email" to user.email,
+                                        "photoUrl" to user.photoUrl?.toString()
+                                    )
+                                    userRef.set(userMap)
+                                        .addOnSuccessListener {
+                                            checkUserProfileExists(user.uid)
+                                        }
+                                        .addOnFailureListener {
+                                            // Even if saving fails, continue
+                                            checkUserProfileExists(user.uid)
+                                        }
+                                } else {
+                                    // User already in Firestore
                                     checkUserProfileExists(user.uid)
                                 }
-                                .addOnFailureListener { e ->
-                                    Log.w("Firestore", "Error saving Google user", e)
-                                    Toast.makeText(this, "Failed to save user info", Toast.LENGTH_SHORT).show()
-                                    checkUserProfileExists(user.uid)
-                                }
-                        } else {
-                            // No Firebase user found, fallback to CompleteProfileActivity
-                            startActivity(Intent(this, CompleteProfileActivity::class.java))
-                            finish()
+                            }.addOnFailureListener {
+                                // Firestore failure fallback
+                                checkUserProfileExists(user.uid)
+                            }
                         }
                     } else {
                         Toast.makeText(this, "Firebase Authentication failed", Toast.LENGTH_LONG).show()
@@ -114,40 +149,24 @@ class LoginActivity : ComponentActivity() {
 
     private fun checkUserProfileExists(uid: String) {
         val db = FirebaseFirestore.getInstance()
-        val userDocRef = db.collection("users").document(uid)
-        userDocRef.get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    Log.d("LoginActivity", "User document data: ${document.data}")
+        val userRef = db.collection("users").document(uid)
 
-                    val firstName = document.getString("firstName")
-                    val lastName = document.getString("lastName")
-                    val dob = document.getString("dateOfBirth")
-                    val gender = document.getString("gender")
-
-                    val profileComplete = !firstName.isNullOrEmpty() &&
-                            !lastName.isNullOrEmpty() &&
-                            !dob.isNullOrEmpty() &&
-                            !gender.isNullOrEmpty()
-
-                    if (profileComplete) {
-                        Log.d("LoginActivity", "Profile complete. Going to MainActivity")
-                        startActivity(Intent(this, MainActivity::class.java))
-                    } else {
-                        Log.d("LoginActivity", "Profile incomplete. Going to CompleteProfileActivity")
-                        startActivity(Intent(this, CompleteProfileActivity::class.java))
-                    }
-                } else {
-                    Log.d("LoginActivity", "No user document found. Going to CompleteProfileActivity")
-                    startActivity(Intent(this, CompleteProfileActivity::class.java))
-                }
+        userRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                // Profile exists, proceed to main
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
-            }
-            .addOnFailureListener { e ->
-                Log.e("LoginActivity", "Failed to get user document", e)
-                Toast.makeText(this, "Failed to verify profile status", Toast.LENGTH_SHORT).show()
+            } else {
+                // Profile missing, go to complete profile screen
                 startActivity(Intent(this, CompleteProfileActivity::class.java))
                 finish()
             }
+        }.addOnFailureListener { e ->
+            Log.e("Firestore", "Failed to check user profile", e)
+            Toast.makeText(this, "Failed to check profile info", Toast.LENGTH_SHORT).show()
+            // To be safe, proceed to main (or handle as you want)
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
     }
 }
