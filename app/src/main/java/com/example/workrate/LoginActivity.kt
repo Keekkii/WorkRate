@@ -12,6 +12,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import android.widget.TextView
 
 class LoginActivity : ComponentActivity() {
 
@@ -37,6 +38,11 @@ class LoginActivity : ComponentActivity() {
         googleSignInButton.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
+        val createAccountLink = findViewById<TextView>(R.id.createAccountLink)
+        createAccountLink.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -73,5 +79,8 @@ class LoginActivity : ComponentActivity() {
             Log.e("GOOGLE_SIGN_IN", "Sign-in failed: ${e.statusCode}", e)
             Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_LONG).show()
         }
+
+
     }
+
 }

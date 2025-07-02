@@ -187,7 +187,9 @@
             android:text="Create one"
             android:textColor="#2563EB"
             android:textStyle="bold"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:clickable="true"
+            android:focusable="true"/>
     </LinearLayout>
 
     <!-- Logo at the bottom -->
