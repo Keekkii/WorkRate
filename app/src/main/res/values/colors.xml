@@ -10,4 +10,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="navBG">#d1d1d1</color>"
+    <color name="gray">#c8c8c8</color>
 </resources>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -12,9 +13,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class LoginActivity : ComponentActivity() {
 
@@ -75,12 +77,39 @@ class LoginActivity : ComponentActivity() {
                     if (task.isSuccessful) {
                         // User is signed in with Firebase
                         val user = FirebaseAuth.getInstance().currentUser
-                        // You can access user?.email, user?.uid, etc.
 
-                        // Start your main activity
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                        if (user != null) {
+                            val db = FirebaseFirestore.getInstance()
+                            val userMap = hashMapOf(
+                                "uid" to user.uid,
+                                "name" to user.displayName,
+                                "email" to user.email,
+                                "photoUrl" to user.photoUrl?.toString()
+                            )
+
+                            db.collection("users").document(user.uid)
+                                .set(userMap)
+                                .addOnSuccessListener {
+                                    Log.d("Firestore", "Google user saved successfully")
+                                    // Start your main activity here after saving
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.w("Firestore", "Error saving Google user", e)
+                                    Toast.makeText(this, "Failed to save user info", Toast.LENGTH_SHORT).show()
+                                    // You might still want to continue even on failure:
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                        } else {
+                            // No user found, just proceed
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
                     } else {
                         Toast.makeText(this, "Firebase Auth failed", Toast.LENGTH_LONG).show()
                     }
@@ -90,5 +119,6 @@ class LoginActivity : ComponentActivity() {
             Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_LONG).show()
         }
     }
+
 
 }
