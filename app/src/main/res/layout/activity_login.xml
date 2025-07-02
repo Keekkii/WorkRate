@@ -85,17 +85,6 @@
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Keep me logged in -->
-    <CheckBox
-        android:id="@+id/keepLoggedInCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Keep me logged in"
-        android:textColor="#FFF"
-        app:layout_constraintTop_toBottomOf="@id/passwordLayout"
-        app:layout_constraintStart_toStartOf="@id/passwordLayout"
-        android:layout_marginTop="8dp"/>
-
     <!-- Sign in Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signInButton"
@@ -105,7 +94,7 @@
         android:textColor="#FFF"
         android:backgroundTint="#2563EB"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/keepLoggedInCheckBox"
+        app:layout_constraintTop_toBottomOf="@id/passwordLayout"
         app:layout_constraintStart_toStartOf="@id/passwordLayout"
         app:layout_constraintEnd_toEndOf="@id/passwordLayout"
         android:layout_marginTop="16dp"
