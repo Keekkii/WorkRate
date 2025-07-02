@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/profileRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#181A20">
+
+    <!-- WORKRATE Title at the very top -->
+    <TextView
+        android:id="@+id/titleWorkrate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WORKRATE"
+        android:textColor="#FFF"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"/>
+
+    <!-- First Name Label -->
+    <TextView
+        android:id="@+id/firstNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FIRST NAME"
+        android:textColor="#FFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:letterSpacing="0.08"
+        app:layout_constraintTop_toBottomOf="@id/titleWorkrate"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="36dp"/>
+
+    <!-- First Name Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/firstNameLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="#23252B"
+        app:boxStrokeColor="#444"
+        app:layout_constraintTop_toBottomOf="@id/firstNameLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/firstNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=""
+            android:textColor="#FFF"
+            android:textColorHint="#AAA"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Last Name Label -->
+    <TextView
+        android:id="@+id/lastNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LAST NAME"
+        android:textColor="#FFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:letterSpacing="0.08"
+        app:layout_constraintTop_toBottomOf="@id/firstNameLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="36dp"/>
+
+    <!-- Last Name Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lastNameLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="#23252B"
+        app:boxStrokeColor="#444"
+        app:layout_constraintTop_toBottomOf="@id/lastNameLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/lastNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=""
+            android:textColor="#FFF"
+            android:textColorHint="#AAA"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Date of Birth Label -->
+    <TextView
+        android:id="@+id/dobLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DATE OF BIRTH"
+        android:textColor="#FFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:letterSpacing="0.08"
+        app:layout_constraintTop_toBottomOf="@id/lastNameLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="36dp"/>
+
+    <!-- Date of Birth Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dobLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="#23252B"
+        app:boxStrokeColor="#444"
+        app:layout_constraintTop_toBottomOf="@id/dobLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/dobEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="DD, MM, YYYY"
+            android:textColor="#FFF"
+            android:textColorHint="#AAA"
+            android:inputType="date"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Gender Label -->
+    <TextView
+        android:id="@+id/genderLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GENDER"
+        android:textColor="#FFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:letterSpacing="0.08"
+        app:layout_constraintTop_toBottomOf="@id/dobLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="36dp"/>
+
+    <!-- Gender RadioGroup -->
+    <RadioGroup
+        android:id="@+id/genderRadioGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/genderLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:gravity="center">
+
+        <RadioButton
+            android:id="@+id/maleRadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="MALE"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:buttonTint="#2563EB"/>
+
+        <RadioButton
+            android:id="@+id/femaleRadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="FEMALE"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:buttonTint="#2563EB"/>
+    </RadioGroup>
+
+    <!-- Confirm Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/confirmButton"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:textColor="#FFF"
+        android:textStyle="bold"
+        android:backgroundTint="#2563EB"
+        app:cornerRadius="24dp"
+        app:layout_constraintTop_toBottomOf="@id/genderRadioGroup"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"/>
+
+    <!-- Logo at the bottom -->
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ikona"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="32dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

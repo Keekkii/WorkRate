@@ -13,6 +13,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import android.widget.TextView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
 class LoginActivity : ComponentActivity() {
 
@@ -25,6 +27,12 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return
+        }
 
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -58,29 +66,29 @@ class LoginActivity : ComponentActivity() {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account: GoogleSignInAccount = completedTask.getResult(ApiException::class.java)
-
-            // You can now access the user's Google account info
             val idToken = account.idToken
-            val email = account.email
-            val name = account.displayName
 
-            Log.d("GOOGLE_SIGN_IN", "Token: $idToken")
-            Log.d("GOOGLE_SIGN_IN", "Email: $email")
-            Log.d("GOOGLE_SIGN_IN", "Name: $name")
+            // Authenticate with Firebase
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // User is signed in with Firebase
+                        val user = FirebaseAuth.getInstance().currentUser
+                        // You can access user?.email, user?.uid, etc.
 
-            // TODO: Send the ID token to your backend server for verification (if needed)
-
-            // Start your main activity
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-
+                        // Start your main activity
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Firebase Auth failed", Toast.LENGTH_LONG).show()
+                    }
+                }
         } catch (e: ApiException) {
             Log.e("GOOGLE_SIGN_IN", "Sign-in failed: ${e.statusCode}", e)
             Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_LONG).show()
         }
-
-
     }
 
 }
