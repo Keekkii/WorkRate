@@ -90,7 +90,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center"
-                android:background="@drawable/nav_icon_bg_selector">
+                android:background="@android:color/transparent">
 
                 <ImageView
                     android:id="@+id/icon_home"
@@ -128,23 +128,23 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center"
-                android:background="@drawable/nav_icon_bg_selector">
+                android:background="@android:color/transparent">
 
                 <ImageView
-                    android:id="@+id/icon_search"
+                    android:id="@+id/bussi"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/search"
+                    android:src="@drawable/bussi"
                     app:tint="@color/primary"
                     android:contentDescription="@string/search_icon" />
             </FrameLayout>
 
             <TextView
-                android:id="@+id/label_search"
+                android:id="@+id/label_bussi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SEARCH"
+                android:text="POST A JOB"
                 android:textColor="@color/primary"
                 android:textStyle="bold"
                 android:textSize="14sp"
@@ -171,7 +171,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center"
-                android:background="@drawable/nav_icon_bg_selector">
+                android:background="@android:color/transparent">
 
                 <ImageView
                     android:id="@+id/icon_map"
@@ -207,7 +207,7 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center"
-                android:background="@drawable/nav_icon_bg_selector">
+                android:background="@android:color/transparent">
 
                 <ImageView
                     android:id="@+id/icon_profile"

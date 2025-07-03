@@ -59,7 +59,11 @@ class ChooseRoleActivity : AppCompatActivity() {
                 .update(userData)
                 .addOnSuccessListener {
                     // Successfully saved - move to HomeActivity
-                    val intent = Intent(this, HomeActivity::class.java)
+                    val intent = when (selectedRole) {
+                        "looking_for_work" -> Intent(this, HomeActivity::class.java)
+                        "looking_for_workers" -> Intent(this, HomeBusinessActivity::class.java)
+                        else -> Intent(this, HomeActivity::class.java)
+                    }
                     startActivity(intent)
                     finish()
                 }

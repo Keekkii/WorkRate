@@ -1,91 +1,130 @@
 package com.example.workrate
 
 import android.os.Bundle
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.workrate.databinding.ActivityHomeBinding
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityHomeBinding
+    private lateinit var navHome: LinearLayout
+    private lateinit var navSearch: LinearLayout
+    private lateinit var navMap: LinearLayout
+    private lateinit var navProfile: LinearLayout
+    private lateinit var navAdd: ImageView
+
+    private lateinit var homeIconBg: FrameLayout
+    private lateinit var searchIconBg: FrameLayout
+    private lateinit var mapIconBg: FrameLayout
+    private lateinit var profileIconBg: FrameLayout
+
+    private lateinit var iconHome: ImageView
+    private lateinit var iconSearch: ImageView
+    private lateinit var iconMap: ImageView
+    private lateinit var iconProfile: ImageView
+
+    private lateinit var labelHome: TextView
+    private lateinit var labelSearch: TextView
+    private lateinit var labelMap: TextView
+    private lateinit var labelProfile: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_home)  // your layout file name here
+
+        // Initialize views with findViewById
+        navHome = findViewById(R.id.nav_home)
+        navSearch = findViewById(R.id.nav_search)
+        navMap = findViewById(R.id.nav_map)
+        navProfile = findViewById(R.id.nav_profile)
+        navAdd = findViewById(R.id.nav_add)
+
+        homeIconBg = findViewById(R.id.home_icon_bg)
+        searchIconBg = findViewById(R.id.search_icon_bg)
+        mapIconBg = findViewById(R.id.map_icon_bg)
+        profileIconBg = findViewById(R.id.profile_icon_bg)
+
+        iconHome = findViewById(R.id.icon_home)
+        iconSearch = findViewById(R.id.icon_search)
+        iconMap = findViewById(R.id.icon_map)
+        iconProfile = findViewById(R.id.icon_profile)
+
+        labelHome = findViewById(R.id.label_home)
+        labelSearch = findViewById(R.id.label_search)
+        labelMap = findViewById(R.id.label_map)
+        labelProfile = findViewById(R.id.label_profile)
 
         // Load HomeFragment by default
         loadFragment(HomeFragment())
+        updateSelectedNav("home")
 
         setupBottomNav()
         setupAddButton()
     }
 
     private fun setupBottomNav() {
-        binding.navHome.setOnClickListener {
+        navHome.setOnClickListener {
             loadFragment(HomeFragment())
             updateSelectedNav("home")
         }
-        binding.navSearch.setOnClickListener {
-            // Replace with your SearchFragment
+        navSearch.setOnClickListener {
             loadFragment(SearchFragment())
             updateSelectedNav("search")
         }
-        binding.navMap.setOnClickListener {
-            // Replace with your MapFragment
+        navMap.setOnClickListener {
             loadFragment(MapFragment())
             updateSelectedNav("map")
         }
-        binding.navProfile.setOnClickListener {
-            // Replace with your ProfileFragment
+        navProfile.setOnClickListener {
             loadFragment(ProfileFragment())
             updateSelectedNav("profile")
         }
     }
 
     private fun setupAddButton() {
-        binding.navAdd.setOnClickListener {
+        navAdd.setOnClickListener {
             Toast.makeText(this, "Add button clicked!", Toast.LENGTH_SHORT).show()
-            // TODO: Implement add button action here
+            // TODO: Implement add button action here, e.g., open AddFragment or start new Activity
         }
     }
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .replace(binding.fragmentContainer.id, fragment)
+            .replace(R.id.fragment_container, fragment)
             .commit()
     }
 
     private fun updateSelectedNav(selected: String) {
-        // Reset all nav icons and labels to default (not selected)
-        binding.iconHome.setColorFilter(getColor(R.color.gray))
-        binding.labelHome.setTextColor(getColor(R.color.gray))
-        binding.iconSearch.setColorFilter(getColor(R.color.gray))
-        binding.labelSearch.setTextColor(getColor(R.color.gray))
-        binding.iconMap.setColorFilter(getColor(R.color.gray))
-        binding.labelMap.setTextColor(getColor(R.color.gray))
-        binding.iconProfile.setColorFilter(getColor(R.color.gray))
-        binding.labelProfile.setTextColor(getColor(R.color.gray))
+        // Reset backgrounds
+        homeIconBg.isSelected = false
+        searchIconBg.isSelected = false
+        mapIconBg.isSelected = false
+        profileIconBg.isSelected = false
 
-        // Highlight the selected nav item (primary color)
-        when(selected) {
-            "home" -> {
-                binding.iconHome.setColorFilter(getColor(R.color.primary))
-                binding.labelHome.setTextColor(getColor(R.color.primary))
-            }
-            "search" -> {
-                binding.iconSearch.setColorFilter(getColor(R.color.primary))
-                binding.labelSearch.setTextColor(getColor(R.color.primary))
-            }
-            "map" -> {
-                binding.iconMap.setColorFilter(getColor(R.color.primary))
-                binding.labelMap.setTextColor(getColor(R.color.primary))
-            }
-            "profile" -> {
-                binding.iconProfile.setColorFilter(getColor(R.color.primary))
-                binding.labelProfile.setTextColor(getColor(R.color.primary))
-            }
+        // Set selected background
+        when (selected) {
+            "home" -> homeIconBg.isSelected = true
+            "search" -> searchIconBg.isSelected = true
+            "map" -> mapIconBg.isSelected = true
+            "profile" -> profileIconBg.isSelected = true
         }
+
+        // Set all icons and labels to primary color (no grey)
+        val primaryColor = getColor(R.color.primary)
+
+        iconHome.setColorFilter(primaryColor)
+        labelHome.setTextColor(primaryColor)
+
+        iconSearch.setColorFilter(primaryColor)
+        labelSearch.setTextColor(primaryColor)
+
+        labelMap.setTextColor(primaryColor)
+
+        iconProfile.setColorFilter(primaryColor)
+        labelProfile.setTextColor(primaryColor)
     }
 }
