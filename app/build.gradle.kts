@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
+    id("kotlin-kapt")
 }
 
 android {
@@ -73,4 +74,6 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
     implementation ("com.google.android.gms:play-services-auth")
     implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
 }
