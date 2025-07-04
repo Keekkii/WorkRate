@@ -1,22 +1,17 @@
 package com.example.workrate
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.workrate.HomeFragment
-import com.example.workrate.SearchFragment
-import com.example.workrate.MapFragment
-import com.example.workrate.ProfileFragment
-
 
 class HomeActivity : AppCompatActivity() {
 
@@ -42,30 +37,15 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var labelProfile: TextView
 
     private lateinit var toolbar: Toolbar
-    private lateinit var drawerLayout: DrawerLayout
-    private var drawerToggle: ActionBarDrawerToggle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // Initialize views
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        // If you want drawer functionality (hamburger icon), wrap your root layout with DrawerLayout
-        // For now, let's assume you added a DrawerLayout and set it here.
-        drawerLayout = findViewById(R.id.drawer_layout) // you need to add this in XML!
-
-        drawerToggle = ActionBarDrawerToggle(
-            this, drawerLayout, toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
-        )
-        drawerLayout.addDrawerListener(drawerToggle!!)
-        drawerToggle!!.syncState()
-
-        // Initialize bottom nav views as before
         navHome = findViewById(R.id.nav_home)
         navSearch = findViewById(R.id.nav_search)
         navMap = findViewById(R.id.nav_map)
@@ -87,10 +67,9 @@ class HomeActivity : AppCompatActivity() {
         labelMap = findViewById(R.id.label_map)
         labelProfile = findViewById(R.id.label_profile)
 
-        // Load HomeFragment by default
         loadFragment(HomeFragment())
         updateSelectedNav("home")
-        showHamburger(false)
+        showToolbar(false)
 
         setupBottomNav()
         setupAddButton()
@@ -100,29 +79,28 @@ class HomeActivity : AppCompatActivity() {
         navHome.setOnClickListener {
             loadFragment(HomeFragment())
             updateSelectedNav("home")
-            showHamburger(false)
+            showToolbar(false)
         }
         navSearch.setOnClickListener {
             loadFragment(SearchFragment())
             updateSelectedNav("search")
-            showHamburger(false)
+            showToolbar(false)
         }
         navMap.setOnClickListener {
             loadFragment(MapFragment())
             updateSelectedNav("map")
-            showHamburger(false)
+            showToolbar(false)
         }
         navProfile.setOnClickListener {
             loadFragment(ProfileFragment())
             updateSelectedNav("profile")
-            showHamburger(true) // Show hamburger only here
+            showToolbar(true)
         }
     }
 
     private fun setupAddButton() {
         navAdd.setOnClickListener {
-            Toast.makeText(this, "Add button clicked!", Toast.LENGTH_SHORT).show()
-            // TODO: Implement add button action here, e.g., open AddFragment or start new Activity
+            Toast.makeText(this, "Add button clicked", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -133,56 +111,42 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun updateSelectedNav(selected: String) {
-        // Reset backgrounds
         homeIconBg.isSelected = false
         searchIconBg.isSelected = false
         mapIconBg.isSelected = false
         profileIconBg.isSelected = false
 
-        labelHome.setTextColor(resources.getColor(R.color.primary))
-        labelSearch.setTextColor(resources.getColor(R.color.primary))
-        labelMap.setTextColor(resources.getColor(R.color.primary))
-        labelProfile.setTextColor(resources.getColor(R.color.primary))
+        labelHome.setTextColor(ContextCompat.getColor(this, R.color.primary))
+        labelSearch.setTextColor(ContextCompat.getColor(this, R.color.primary))
+        labelMap.setTextColor(ContextCompat.getColor(this, R.color.primary))
+        labelProfile.setTextColor(ContextCompat.getColor(this, R.color.primary))
 
-        // Highlight selected
         when (selected) {
-            "home" -> {
-                homeIconBg.isSelected = true
-                labelHome.setTextColor(resources.getColor(R.color.primary))
-            }
-            "search" -> {
-                searchIconBg.isSelected = true
-                labelSearch.setTextColor(resources.getColor(R.color.primary))
-            }
-            "map" -> {
-                mapIconBg.isSelected = true
-                labelMap.setTextColor(resources.getColor(R.color.primary))
-            }
-            "profile" -> {
-                profileIconBg.isSelected = true
-                labelProfile.setTextColor(resources.getColor(R.color.primary))
-            }
+            "home" -> homeIconBg.isSelected = true
+            "search" -> searchIconBg.isSelected = true
+            "map" -> mapIconBg.isSelected = true
+            "profile" -> profileIconBg.isSelected = true
         }
     }
 
-    // Controls showing/hiding hamburger icon
-    private fun showHamburger(show: Boolean) {
-        if (show) {
-            drawerToggle?.isDrawerIndicatorEnabled = true
-            drawerToggle?.syncState()
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        } else {
-            drawerToggle?.isDrawerIndicatorEnabled = false
-            drawerToggle?.syncState()
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        }
+    private fun showToolbar(show: Boolean) {
+        toolbar.visibility = if (show) Toolbar.VISIBLE else Toolbar.GONE
     }
 
-    override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_drawer_toggle -> {
+                // Replace with showing a BottomSheet
+                val bottomSheet = SettingsBottomSheet()
+                bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

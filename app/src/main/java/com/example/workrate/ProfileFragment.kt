@@ -2,7 +2,6 @@ package com.example.workrate
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,7 +52,6 @@ class ProfileFragment : Fragment() {
             .get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
-                    // Handle both Google and normal users
                     val fullName = when {
                         document.contains("firstName") && document.contains("lastName") -> {
                             val firstName = document.getString("firstName") ?: ""
@@ -89,8 +87,6 @@ class ProfileFragment : Fragment() {
                 Toast.makeText(requireContext(), "Failed to load user data: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
-
-
 
     private fun setupLogoutButton() {
         logoutButton.setOnClickListener {
