@@ -1,30 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bottom_sheet_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/white">
+    android:padding="24dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white">
 
+    <!-- Title -->
     <TextView
         android:id="@+id/tv_settings_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Settings"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:paddingBottom="8dp"/>
+        android:paddingBottom="32dp"
+        android:textColor="@color/primary" />
 
-    <!-- Example setting option -->
-    <TextView
-        android:id="@+id/tv_logout"
+    <!-- Dark Mode Toggle -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Logout"
-        android:paddingVertical="12dp"
-        android:textColor="@color/red" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="24dp">
 
-    <!-- Add more settings items as you want -->
+        <!-- SVG/vector drawable on the left -->
+        <ImageView
+            android:id="@+id/iv_dark_mode"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/moon"
+            android:layout_marginEnd="12dp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Dark Mode"
+            android:textColor="@color/primary"
+            android:textSize="16sp" />
+
+        <Switch
+            android:id="@+id/switch_dark_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <!-- Language Row (Clickable) -->
+    <LinearLayout
+        android:id="@+id/language_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="24dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!-- Drawable on the left (e.g., globe icon) -->
+        <ImageView
+            android:id="@+id/iv_language_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/globus"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Language"
+            android:textColor="@color/primary"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="English"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@android:color/holo_blue_dark"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Optional: Dropdown arrow on the right -->
+        <ImageView
+            android:id="@+id/iv_language_arrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/arrow"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+
+    <!-- Push Notifications Toggle -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="24dp">
+
+        <!-- Drawable on the left (e.g., bell icon) -->
+        <ImageView
+            android:id="@+id/iv_push_notifications"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/bell"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Push Notifications"
+            android:textColor="@color/primary"
+            android:textSize="16sp" />
+
+        <Switch
+            android:id="@+id/switch_notifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <!-- Terms of Use (Clickable) -->
+    <TextView
+        android:id="@+id/tv_terms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Terms of Use"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:gravity="left"
+        android:paddingVertical="8dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- Help Center (Clickable) -->
+    <TextView
+        android:id="@+id/tv_help"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Help Center"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:gravity="left"
+        android:paddingVertical="8dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- Delete Account (centered, bold) -->
+    <Button
+        android:id="@+id/btn_delete_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Account"
+        android:textStyle="bold"
+        android:textColor="@color/primary"
+        android:background="@drawable/button_outlined_primary"
+        android:gravity="center"
+        android:paddingVertical="12dp"
+        app:backgroundTint="@null"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btn_log_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Log Out"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:background="@drawable/button_filled_blue"
+        android:gravity="center"
+        app:backgroundTint="@null"
+        android:paddingVertical="12dp"/>
 
 </LinearLayout>
