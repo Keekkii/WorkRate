@@ -35,26 +35,22 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Initialize views
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         signInButton = findViewById(R.id.signInButton)
         googleSignInButton = findViewById(R.id.googleSignInButton)
         createAccountLink = findViewById(R.id.createAccountLink)
 
-        // "Create one" link click
         createAccountLink.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java)) // Replace with your sign-up activity
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
-        // Already signed in
         val currentUser = FirebaseAuth.getInstance().currentUser
         if (currentUser != null) {
             checkUserProfileExists(currentUser.uid)
             return
         }
 
-        // Google Sign-In options
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(webClientId)
             .requestEmail()
@@ -62,7 +58,6 @@ class LoginActivity : ComponentActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        // Email/password login
         signInButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
@@ -76,20 +71,13 @@ class LoginActivity : ComponentActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val user = FirebaseAuth.getInstance().currentUser
-                        if (user != null) {
-                            checkUserProfileExists(user.uid)
-                        }
+                        user?.let { checkUserProfileExists(it.uid) }
                     } else {
-                        Toast.makeText(
-                            this,
-                            "Authentication failed: ${task.exception?.message}",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                     }
                 }
         }
 
-        // Google Sign-In button
         googleSignInButton.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
@@ -115,7 +103,7 @@ class LoginActivity : ComponentActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val user = FirebaseAuth.getInstance().currentUser
-                        if (user != null) {
+                        user?.let {
                             val db = FirebaseFirestore.getInstance()
                             val userRef = db.collection("users").document(user.uid)
 
@@ -128,12 +116,8 @@ class LoginActivity : ComponentActivity() {
                                         "photoUrl" to user.photoUrl?.toString()
                                     )
                                     userRef.set(userMap)
-                                        .addOnSuccessListener {
-                                            checkUserProfileExists(user.uid)
-                                        }
-                                        .addOnFailureListener {
-                                            checkUserProfileExists(user.uid)
-                                        }
+                                        .addOnSuccessListener { checkUserProfileExists(user.uid) }
+                                        .addOnFailureListener { checkUserProfileExists(user.uid) }
                                 } else {
                                     checkUserProfileExists(user.uid)
                                 }
@@ -157,31 +141,35 @@ class LoginActivity : ComponentActivity() {
 
         userRef.get().addOnSuccessListener { document ->
             if (document.exists()) {
+                val dateOfBirth = document.getString("dateOfBirth")
                 val role = document.getString("role")
 
-                when (role) {
-                    "looking_for_work" -> {
+                when {
+                    dateOfBirth.isNullOrEmpty() -> {
+                        startActivity(Intent(this, CompleteProfileActivity::class.java))
+                    }
+                    role.isNullOrEmpty() -> {
+                        startActivity(Intent(this, ChooseRoleActivity::class.java))
+                    }
+                    role == "looking_for_work" -> {
                         startActivity(Intent(this, HomeActivity::class.java))
                     }
-                    "looking_for_workers" -> {
+                    role == "looking_for_workers" -> {
                         startActivity(Intent(this, HomeBusinessActivity::class.java))
                     }
                     else -> {
-                        // If no role or invalid value, go to role selection
                         startActivity(Intent(this, ChooseRoleActivity::class.java))
                     }
                 }
                 finish()
             } else {
-                // Profile doesn't exist — complete it
                 startActivity(Intent(this, CompleteProfileActivity::class.java))
                 finish()
             }
-        }.addOnFailureListener { e ->
+        }.addOnFailureListener {
             Toast.makeText(this, "Failed to load user data", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, CompleteProfileActivity::class.java))
             finish()
         }
     }
-
 }

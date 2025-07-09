@@ -13,12 +13,15 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ProfileFragment : Fragment() {
 
     private lateinit var profileImageView: ImageView
     private lateinit var nameTextView: TextView
     private lateinit var emailTextView: TextView
+    private lateinit var ageTextView: TextView
     private lateinit var logoutButton: Button
 
     override fun onCreateView(
@@ -30,6 +33,7 @@ class ProfileFragment : Fragment() {
         profileImageView = view.findViewById(R.id.profileImageView)
         nameTextView = view.findViewById(R.id.nameTextView)
         emailTextView = view.findViewById(R.id.emailTextView)
+        ageTextView = view.findViewById(R.id.ageTextView)
 
         loadUserData()
 
@@ -65,9 +69,18 @@ class ProfileFragment : Fragment() {
                     val email = document.getString("email") ?: "No email"
                     val photoUrl = document.getString("photoUrl") ?: ""
                     val gender = document.getString("gender")?.lowercase() ?: ""
+                    val dobString = document.getString("dateOfBirth")
 
                     nameTextView.text = fullName
                     emailTextView.text = email
+
+                    // Age Calculation
+                    if (!dobString.isNullOrEmpty()) {
+                        val age = calculateAgeFromDOB(dobString)
+                        ageTextView.text = age.toString()
+                    } else {
+                        ageTextView.text = "-"
+                    }
 
                     if (photoUrl.isNotEmpty()) {
                         Glide.with(this)
@@ -90,5 +103,27 @@ class ProfileFragment : Fragment() {
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Failed to load user data: ${e.message}", Toast.LENGTH_LONG).show()
             }
+    }
+
+    private fun calculateAgeFromDOB(dob: String): Int {
+        return try {
+            val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            val birthDate = sdf.parse(dob)
+            val today = Calendar.getInstance()
+
+            val birthCalendar = Calendar.getInstance()
+            birthCalendar.time = birthDate!!
+
+            var age = today.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR)
+
+            if (today.get(Calendar.DAY_OF_YEAR) < birthCalendar.get(Calendar.DAY_OF_YEAR)) {
+                age--
+            }
+
+            age
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0
+        }
     }
 }
