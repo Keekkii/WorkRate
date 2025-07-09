@@ -22,6 +22,5 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("HomeFragment", "onViewCreated called")
-        Toast.makeText(requireContext(), "Home Fragment Loaded", Toast.LENGTH_SHORT).show()
     }
 }

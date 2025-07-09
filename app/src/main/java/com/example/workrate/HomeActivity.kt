@@ -12,9 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import android.os.Build
-import android.view.View
-
 
 class HomeActivity : AppCompatActivity() {
 
@@ -44,14 +41,9 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.navigationBarColor = ContextCompat.getColor(this, R.color.light_grey)
-        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or
-                    View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-        }
+        // Notice: No changes to system nav bar color or icon visibility
+
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -151,7 +143,6 @@ class HomeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_drawer_toggle -> {
-                // Replace with showing a BottomSheet
                 val bottomSheet = SettingsBottomSheet()
                 bottomSheet.show(supportFragmentManager, bottomSheet.tag)
                 true

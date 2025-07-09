@@ -3,11 +3,10 @@
     <style name="Theme.Workrate" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your theme here -->
         <item name="colorPrimary">@color/primary</item>
-        <item name="colorSecondary">@color/secondary</item>
+
         <item name="android:statusBarColor">@color/primary</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="android:textColorHint">#CCCCCC</item>
         <item name="colorOnSurface">#FFFFFF</item>
-        <item name="android:navigationBarColor">@color/light_grey</item>
     </style>
 </resources>
