@@ -1,244 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- Main vertical content (header + fragment container) -->
-    <LinearLayout
+    <!-- Add Toolbar at the top -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:titleTextColor="@android:color/white"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <!-- Top Header -->
-        <LinearLayout
-            android:id="@+id/home_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/white"
-            android:paddingTop="32dp"
-            android:paddingBottom="0dp">
+    <!-- Rest of your content inside FrameLayout -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/logo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="WORKRATE"
-                    android:textStyle="bold"
-                    android:textSize="28sp"
-                    android:textColor="@color/primary"
-                    android:fontFamily="sans-serif-black" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:id="@+id/chat_icon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/addbuttontopnav"
-                    android:contentDescription="@string/union" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#E0E0E0" />
-        </LinearLayout>
-
-        <!-- Fragment container (fills remaining space) -->
+        <!-- Your existing FrameLayout content -->
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <!-- Bottom navigation bar (fixed at the bottom) -->
-    <LinearLayout
-        android:id="@+id/custom_bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="bottom"
-        android:background="@color/light_grey"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <!-- HOME -->
-        <LinearLayout
-            android:id="@+id/nav_home"
-            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:layout_marginBottom="100dp" />
 
-            <FrameLayout
-                android:id="@+id/home_icon_bg"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent">
+        <!-- Bottom navigation bar -->
+        <LinearLayout
+            android:id="@+id/custom_bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-                <ImageView
-                    android:id="@+id/icon_home"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+            <!-- HOME -->
+            <LinearLayout
+                android:id="@+id/nav_home"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <FrameLayout
+                    android:id="@+id/home_icon_bg"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/home"
-                    app:tint="@color/primary"
-                    android:contentDescription="@string/home_icon" />
-            </FrameLayout>
+                    android:background="@android:color/transparent">
 
-            <TextView
-                android:id="@+id/label_home"
+                    <ImageView
+                        android:id="@+id/icon_home"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/home"
+                        app:tint="@color/primary"
+                        android:contentDescription="@string/home_icon" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/label_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="HOME"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <!-- SEARCH -->
+            <LinearLayout
+                android:id="@+id/nav_search"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="HOME"
-                android:textColor="@color/primary"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp">
+
+                <FrameLayout
+                    android:id="@+id/search_icon_bg"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent">
+
+                    <ImageView
+                        android:id="@+id/bussi"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/bussi"
+                        app:tint="@color/primary"
+                        android:contentDescription="@string/search_icon" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/label_bussi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="POST A JOB"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <!-- Spacer for diamond button -->
+            <View
+                android:layout_width="56dp"
+                android:layout_height="match_parent" />
+
+            <!-- MAP -->
+            <LinearLayout
+                android:id="@+id/nav_map"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp">
+
+                <FrameLayout
+                    android:id="@+id/map_icon_bg"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent">
+
+                    <ImageView
+                        android:id="@+id/icon_map"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/group_4"
+                        android:contentDescription="@string/map_icon" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/label_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MAP"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+            <!-- PROFILE -->
+            <LinearLayout
+                android:id="@+id/nav_profile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <FrameLayout
+                    android:id="@+id/profile_icon_bg"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent">
+
+                    <ImageView
+                        android:id="@+id/icon_profile"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/user"
+                        app:tint="@color/primary"
+                        android:contentDescription="@string/profile_icon" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/label_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PROFILE"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- SEARCH -->
-        <LinearLayout
-            android:id="@+id/nav_search"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp">
+        <!-- Floating ADD button -->
+        <ImageView
+            android:id="@+id/nav_add"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/recmess"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="36dp"
+            android:elevation="8dp"
+            android:contentDescription="@string/add_icon" />
+    </FrameLayout>
 
-            <FrameLayout
-                android:id="@+id/search_icon_bg"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent">
-
-                <ImageView
-                    android:id="@+id/bussi"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/bussi"
-                    app:tint="@color/primary"
-                    android:contentDescription="@string/search_icon" />
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/label_bussi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="POST A JOB"
-                android:textColor="@color/primary"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp" />
-        </LinearLayout>
-
-        <!-- Spacer for diamond button -->
-        <View
-            android:layout_width="56dp"
-            android:layout_height="match_parent" />
-
-        <!-- MAP -->
-        <LinearLayout
-            android:id="@+id/nav_map"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="8dp">
-
-            <FrameLayout
-                android:id="@+id/map_icon_bg"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent">
-
-                <ImageView
-                    android:id="@+id/icon_map"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/group_4"
-                    android:contentDescription="@string/map_icon" />
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/label_map"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MAP"
-                android:textColor="@color/primary"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp" />
-        </LinearLayout>
-
-        <!-- PROFILE -->
-        <LinearLayout
-            android:id="@+id/nav_profile"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <FrameLayout
-                android:id="@+id/profile_icon_bg"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent">
-
-                <ImageView
-                    android:id="@+id/icon_profile"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/user"
-                    app:tint="@color/primary"
-                    android:contentDescription="@string/profile_icon" />
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/label_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PROFILE"
-                android:textColor="@color/primary"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- Center ADD button, floating above nav bar -->
-    <ImageView
-        android:id="@+id/nav_add"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/recmess"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="36dp"
-        android:elevation="8dp"
-        android:contentDescription="@string/add_icon" />
-</FrameLayout>
+</LinearLayout>

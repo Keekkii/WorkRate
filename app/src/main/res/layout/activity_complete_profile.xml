@@ -141,13 +141,13 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/dobEditText"
-                android:layout_width="match_parent"
+                android:layout_width="347dp"
                 android:layout_height="wrap_content"
-                android:hint="DD.MM.YYYY"
-                android:textColor="#FFF"
-                android:textColorHint="#AAA"
                 android:focusable="false"
-                android:inputType="none" />
+                android:hint="DD.MM.YYYY"
+                android:inputType="none"
+                android:textColor="#FFF"
+                android:textColorHint="#AAA" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView

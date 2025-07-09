@@ -1,9 +1,12 @@
 package com.example.workrate
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 
 class HomeBusinessActivity : AppCompatActivity() {
@@ -18,9 +21,17 @@ class HomeBusinessActivity : AppCompatActivity() {
     private lateinit var navMap: LinearLayout
     private lateinit var navProfile: LinearLayout
 
+    private lateinit var toolbar: Toolbar
+
+    private var currentTab = "home"  // Track selected tab
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_business)
+
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         homeIconBg = findViewById(R.id.home_icon_bg)
         searchIconBg = findViewById(R.id.search_icon_bg)
@@ -35,26 +46,33 @@ class HomeBusinessActivity : AppCompatActivity() {
         // Initially select home and load Home fragment
         selectNavItem("home")
         loadFragment(HomeBusinessFragment()) // Replace with your actual fragment class
+        showToolbar(false) // Hide toolbar initially (only show on profile)
 
         navHome.setOnClickListener {
             selectNavItem("home")
             loadFragment(HomeBusinessFragment())
+            showToolbar(false)
         }
         navSearch.setOnClickListener {
             selectNavItem("search")
             loadFragment(PostAJobFragment())
+            showToolbar(false)
         }
         navMap.setOnClickListener {
             selectNavItem("map")
             loadFragment(MapFragment())
+            showToolbar(false)
         }
         navProfile.setOnClickListener {
             selectNavItem("profile")
             loadFragment(ProfileFragment())
+            showToolbar(true)
         }
     }
 
     private fun selectNavItem(item: String) {
+        currentTab = item
+
         homeIconBg.setBackgroundResource(android.R.color.transparent)
         searchIconBg.setBackgroundResource(android.R.color.transparent)
         mapIconBg.setBackgroundResource(android.R.color.transparent)
@@ -66,6 +84,8 @@ class HomeBusinessActivity : AppCompatActivity() {
             "map" -> mapIconBg.setBackgroundResource(R.drawable.ellipse_679)
             "profile" -> profileIconBg.setBackgroundResource(R.drawable.ellipse_679)
         }
+
+        invalidateOptionsMenu() // Refresh menu to show/hide hamburger
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -73,5 +93,26 @@ class HomeBusinessActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
-}
 
+    private fun showToolbar(show: Boolean) {
+        toolbar.visibility = if (show) Toolbar.VISIBLE else Toolbar.GONE
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar, menu)
+        val menuItem = menu?.findItem(R.id.action_drawer_toggle)
+        menuItem?.isVisible = (currentTab == "profile") // Show hamburger only on profile tab
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_drawer_toggle -> {
+                val bottomSheet = SettingsBottomSheet()
+                bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+}
