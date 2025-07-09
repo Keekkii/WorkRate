@@ -1,5 +1,6 @@
 package com.example.workrate
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
@@ -12,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Calendar
 
 class CompleteProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +34,21 @@ class CompleteProfileActivity : AppCompatActivity() {
         val dobEditText = findViewById<EditText>(R.id.dobEditText)
         val genderRadioGroup = findViewById<RadioGroup>(R.id.genderRadioGroup)
         val confirmButton = findViewById<MaterialButton>(R.id.confirmButton)
+
+        // Show DatePickerDialog on DOB click
+        dobEditText.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                val formattedDate = String.format("%02d.%02d.%04d", selectedDay, selectedMonth + 1, selectedYear)
+                dobEditText.setText(formattedDate)
+            }, year, month, day)
+
+            datePickerDialog.show()
+        }
 
         confirmButton.setOnClickListener {
             val firstName = firstNameEditText.text.toString().trim()
@@ -68,7 +85,6 @@ class CompleteProfileActivity : AppCompatActivity() {
             db.collection("users").document(user.uid).set(userData)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Profile saved!", Toast.LENGTH_SHORT).show()
-                    // Go to your main activity or next step
                     startActivity(Intent(this, ChooseRoleActivity::class.java))
                     finish()
                 }

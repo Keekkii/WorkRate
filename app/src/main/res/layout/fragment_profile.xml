@@ -32,8 +32,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginTop="16dp"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/ellipse_679" />
+                    android:scaleType="centerCrop" />
 
                 <!-- Name and Last Name -->
                 <TextView

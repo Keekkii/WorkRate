@@ -30,10 +30,8 @@ class ProfileFragment : Fragment() {
         profileImageView = view.findViewById(R.id.profileImageView)
         nameTextView = view.findViewById(R.id.nameTextView)
         emailTextView = view.findViewById(R.id.emailTextView)
-        logoutButton = view.findViewById(R.id.button_logout)
 
         loadUserData()
-        setupLogoutButton()
 
         return view
     }
@@ -66,6 +64,7 @@ class ProfileFragment : Fragment() {
 
                     val email = document.getString("email") ?: "No email"
                     val photoUrl = document.getString("photoUrl") ?: ""
+                    val gender = document.getString("gender")?.lowercase() ?: ""
 
                     nameTextView.text = fullName
                     emailTextView.text = email
@@ -77,7 +76,12 @@ class ProfileFragment : Fragment() {
                             .placeholder(R.drawable.ellipse_679)
                             .into(profileImageView)
                     } else {
-                        profileImageView.setImageResource(R.drawable.ellipse_679)
+                        val drawableRes = when (gender) {
+                            "male" -> R.drawable.manprof
+                            "female" -> R.drawable.femaleprof
+                            else -> R.drawable.ellipse_679
+                        }
+                        profileImageView.setImageResource(drawableRes)
                     }
                 } else {
                     Toast.makeText(requireContext(), "User document not found", Toast.LENGTH_SHORT).show()
@@ -86,14 +90,5 @@ class ProfileFragment : Fragment() {
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Failed to load user data: ${e.message}", Toast.LENGTH_LONG).show()
             }
-    }
-
-    private fun setupLogoutButton() {
-        logoutButton.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            val intent = Intent(requireContext(), LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-        }
     }
 }
