@@ -22,7 +22,7 @@ class ProfileFragment : Fragment() {
     private lateinit var nameTextView: TextView
     private lateinit var emailTextView: TextView
     private lateinit var ageTextView: TextView
-    private lateinit var logoutButton: Button
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

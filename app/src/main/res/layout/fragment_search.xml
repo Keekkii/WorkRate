@@ -1,14 +1,848 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search_fragment_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SearchFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- Scrollable content -->
+    <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_above="@+id/btn_create_job_notification"
+        android:padding="16dp">
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/filter_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header -->
+            <LinearLayout
+                android:id="@+id/home_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:paddingTop="32dp"
+                android:paddingBottom="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/logo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WORKRATE"
+                        android:textStyle="bold"
+                        android:textSize="28sp"
+                        android:textColor="@color/primary"
+                        android:fontFamily="sans-serif-black" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#E0E0E0" />
+            </LinearLayout>
+
+            <!-- Search Input -->
+            <EditText
+                android:id="@+id/search_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search for jobs..."
+                android:drawableEnd="@android:drawable/ic_menu_search"
+                android:inputType="text"
+                android:padding="10dp"
+                android:background="@android:drawable/edit_text"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp" />
+
+            <!-- Reusable expandable filter block -->
+            <!-- JOB TITLE -->
+            <LinearLayout
+                android:id="@+id/filter_job_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/job_title_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="JOB TITLE:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/job_title_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/job_title_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter job title..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- LOCATION -->
+            <LinearLayout
+                android:id="@+id/filter_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/location_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="LOCATION:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/location_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/location_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter location..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- EMPLOYMENT TYPE -->
+            <LinearLayout
+                android:id="@+id/filter_employment_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/employment_type_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="EMPLOYMENT TYPE:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/employment_type_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/employment_type_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter employment type..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- CONTRACT DURATION -->
+            <LinearLayout
+                android:id="@+id/filter_contract_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/contract_duration_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="CONTRACT DURATION:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/contract_duration_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/contract_duration_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter contract duration..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- WORK SCHEDULE -->
+            <LinearLayout
+                android:id="@+id/filter_work_schedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/work_schedule_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="WORK SCHEDULE:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/work_schedule_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/work_schedule_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter work schedule..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- SALARY -->
+            <LinearLayout
+                android:id="@+id/filter_salary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/salary_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="SALARY:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/salary_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/salary_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter salary..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ACCOMODATION -->
+            <LinearLayout
+                android:id="@+id/filter_accomodation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/accomodation_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="ACCOMODATION:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/accomodation_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/accomodation_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter accomodation..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- EDUCATION LEVEL -->
+            <LinearLayout
+                android:id="@+id/filter_education_level"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/education_level_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="EDUCATION LEVEL:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/education_level_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/education_level_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter education level..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- LANGUAGE REQUIREMENTS -->
+            <LinearLayout
+                android:id="@+id/filter_language_requirements"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/language_requirements_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="LANGUAGE REQUIREMENTS:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/language_requirements_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/language_requirements_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter language requirements..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- INTERNSHIP/APPRENTICESHIP -->
+            <LinearLayout
+                android:id="@+id/filter_internship_apprenticeship"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/internship_apprenticeship_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="INTERNSHIP/APPRENTICESHIP:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/internship_apprenticeship_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/internship_apprenticeship_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter internship/apprenticeship info..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- INDUSTRY -->
+            <LinearLayout
+                android:id="@+id/filter_industry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/industry_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="INDUSTRY:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/industry_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/industry_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter industry..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- COMPANY SIZE -->
+            <LinearLayout
+                android:id="@+id/filter_company_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/company_size_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="COMPANY SIZE:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/company_size_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/company_size_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter company size..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- COMPANY RATING -->
+            <LinearLayout
+                android:id="@+id/filter_company_rating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/company_rating_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="COMPANY RATING:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/company_rating_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/company_rating_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter company rating..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- REMOTE/IN-OFFICE -->
+            <LinearLayout
+                android:id="@+id/filter_remote_in_office"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/remote_in_office_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="REMOTE/IN-OFFICE:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/remote_in_office_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/remote_in_office_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter remote/in-office..." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- DATE POSTED -->
+            <LinearLayout
+                android:id="@+id/filter_date_posted"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/date_posted_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="DATE POSTED:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/date_posted_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/date_posted_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter date posted..." />
+                </LinearLayout>
+            </LinearLayout>
+            <!-- BENEFITS OFFERED -->
+            <LinearLayout
+                android:id="@+id/filter_benefits_offered"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/benefits_offered_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="BENEFITS OFFERED:"
+                        android:textStyle="bold"
+                        android:textColor="#2B3F6C"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/benefits_offered_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/arrow_right"
+                        app:tint="#2B3F6C" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/benefits_offered_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:paddingTop="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter benefits offered..." />
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+    <Button
+        android:id="@+id/btn_create_job_notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create job notification"
+        android:layout_alignParentBottom="true"
+        android:background="#0055CC"
+        android:textColor="#FFFFFF"
+        android:padding="16dp"
+        android:layout_margin="16dp"
+        android:elevation="6dp"/>
+
+
+</RelativeLayout>
+
