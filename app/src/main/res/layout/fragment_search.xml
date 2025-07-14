@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Search for jobs..."
-        android:drawableEnd="@android:drawable/ic_menu_search"
+        android:drawableEnd="@drawable/search"
         android:inputType="text"
         android:padding="10dp"
         android:background="@android:drawable/edit_text"
@@ -83,29 +83,36 @@
 
 
             <!-- Reusable expandable filter block -->
-            <!-- JOB TITLE -->
+            <!-- JOB TITLE FILTER BLOCK -->
             <LinearLayout
                 android:id="@+id/filter_job_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="5dp"
-                android:paddingTop="8dp">
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
+                <!-- Header (always visible) -->
                 <LinearLayout
                     android:id="@+id/job_title_header"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="56dp"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:background="@drawable/job_title_header_bg"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
 
                     <TextView
+                        android:id="@+id/job_title_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="JOB TITLE:"
                         android:textStyle="bold"
-                        android:textColor="#2B3F6C"
+                        android:textColor="#1156AC"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -113,23 +120,47 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/arrow_right"
-                        app:tint="#2B3F6C" />
+                        app:tint="#1156AC" />
                 </LinearLayout>
 
+                <!-- Expandable content (hidden by default, white rounded background) -->
                 <LinearLayout
                     android:id="@+id/job_title_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@drawable/rounded_expandable_bg"
                     android:visibility="gone"
-                    android:paddingTop="8dp">
+                    android:padding="12dp"
+                    android:elevation="2dp"
+                    android:layout_marginTop="8dp">
 
                     <EditText
+                        android:id="@+id/job_search_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Enter job title..." />
+                        android:hint="Search..."
+                        android:background="@android:drawable/edit_text"
+                        android:padding="8dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <!-- Job title checkboxes with white square inside -->
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/job_title_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="C 130 pilot instructor"
+                        android:textColor="@color/white"
+                        android:background="@android:color/transparent"
+                        app:buttonCompat="@drawable/checkbox_selector"
+                        android:buttonTint="@null" />
+
+
+                    <!-- Add more CheckBoxes as needed -->
                 </LinearLayout>
             </LinearLayout>
+
+
 
             <!-- LOCATION -->
             <LinearLayout
