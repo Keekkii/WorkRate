@@ -140,6 +140,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Search..."
                         android:padding="8dp"
+                        android:background="@drawable/rounded_edittext_bg"
                         android:layout_marginBottom="8dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
