@@ -3,10 +3,12 @@ package com.example.workrate
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workrate.data.JobTitle
+import android.widget.ImageView
+
 
 class JobTitleAdapter : RecyclerView.Adapter<JobTitleAdapter.ViewHolder>() {
 
@@ -29,36 +31,33 @@ class JobTitleAdapter : RecyclerView.Adapter<JobTitleAdapter.ViewHolder>() {
     override fun getItemCount(): Int = jobTitles.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val jobTitle = jobTitles[position]
-        holder.bind(jobTitle)
+        holder.bind(jobTitles[position])
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleText: TextView = itemView.findViewById(R.id.job_title_text)
-        private val checkBox: CheckBox = itemView.findViewById(R.id.job_checkbox)
+        private val checkbox: ImageView = itemView.findViewById(R.id.job_checkbox_custom)
 
         fun bind(jobTitle: JobTitle) {
             titleText.text = jobTitle.title
 
-            // Remove listener to avoid triggering it on recycle
-            checkBox.setOnCheckedChangeListener(null)
+            // Set checkbox image based on selection
+            val isChecked = selectedItems.contains(jobTitle)
+            checkbox.setImageResource(
+                if (isChecked) R.drawable.ic_checkbox_checked
+                else R.drawable.ic_checkbox_unchecked
+            )
 
-            // Set current state
-            checkBox.isChecked = selectedItems.contains(jobTitle)
-
-            // Reattach listener
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    selectedItems.add(jobTitle)
-                } else {
-                    selectedItems.remove(jobTitle)
-                }
-            }
-
-            // Optional: click row to toggle checkbox
+            // Toggle on click
             itemView.setOnClickListener {
-                checkBox.isChecked = !checkBox.isChecked
+                val nowChecked = !selectedItems.contains(jobTitle)
+                if (nowChecked) selectedItems.add(jobTitle)
+                else selectedItems.remove(jobTitle)
+
+                // Update UI
+                notifyItemChanged(adapterPosition)
             }
         }
     }
 }
+

@@ -1,16 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="12dp"
+    android:padding="8dp"
     android:gravity="center_vertical">
 
-    <CheckBox
-        android:id="@+id/job_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:button="@drawable/checkbox_selector" />  <!-- your selector drawable -->
+    <ImageView
+        android:id="@+id/job_checkbox_custom"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:src="@drawable/ic_checkbox_unchecked"
+        android:contentDescription="Checkbox"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:id="@+id/job_title_text"
@@ -19,7 +21,5 @@
         android:layout_weight="1"
         android:text="Job Title"
         android:textSize="16sp"
-        android:paddingStart="12dp"
-        android:textColor="#000" />
-
+        android:textColor="#FFFFFF" />
 </LinearLayout>
