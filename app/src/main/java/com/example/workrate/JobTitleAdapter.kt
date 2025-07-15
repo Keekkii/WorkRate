@@ -3,21 +3,24 @@ package com.example.workrate
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.example.workrate.data.JobTitle
-import android.widget.ImageView
-
 
 class JobTitleAdapter : RecyclerView.Adapter<JobTitleAdapter.ViewHolder>() {
 
     private var jobTitles = listOf<JobTitle>()
     private val selectedItems = mutableSetOf<JobTitle>()
 
+    // Callback for selection changes
+    var onSelectionChanged: ((selectedCount: Int) -> Unit)? = null
+
     fun setFullList(list: List<JobTitle>) {
         jobTitles = list
         notifyDataSetChanged()
+        // Notify initial selection state (probably zero)
+        onSelectionChanged?.invoke(selectedItems.size)
     }
 
     fun getSelectedItems(): List<JobTitle> = selectedItems.toList()
@@ -41,23 +44,21 @@ class JobTitleAdapter : RecyclerView.Adapter<JobTitleAdapter.ViewHolder>() {
         fun bind(jobTitle: JobTitle) {
             titleText.text = jobTitle.title
 
-            // Set checkbox image based on selection
             val isChecked = selectedItems.contains(jobTitle)
             checkbox.setImageResource(
                 if (isChecked) R.drawable.ic_checkbox_checked
                 else R.drawable.ic_checkbox_unchecked
             )
 
-            // Toggle on click
             itemView.setOnClickListener {
                 val nowChecked = !selectedItems.contains(jobTitle)
                 if (nowChecked) selectedItems.add(jobTitle)
                 else selectedItems.remove(jobTitle)
 
-                // Update UI
                 notifyItemChanged(adapterPosition)
+                // Notify fragment about selection count change
+                onSelectionChanged?.invoke(selectedItems.size)
             }
         }
     }
 }
-

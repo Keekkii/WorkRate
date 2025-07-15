@@ -1,6 +1,5 @@
 package com.example.workrate
 
-import com.example.workrate.JobTitleAdapter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +16,6 @@ import androidx.room.Room
 import com.example.workrate.data.AppDatabase
 import com.example.workrate.data.JobTitleDao
 import kotlinx.coroutines.*
-
 
 class SearchFragment : Fragment() {
 
@@ -53,19 +52,29 @@ class SearchFragment : Fragment() {
         val jobTitleHeader = view.findViewById<View>(R.id.job_title_header)
         val jobTitleContent = view.findViewById<View>(R.id.job_title_content)
         val jobTitleArrow = view.findViewById<ImageView>(R.id.job_title_arrow)
+        val jobTitleText = view.findViewById<TextView>(R.id.job_title_text)
 
         var isExpanded = false
         jobTitleHeader.setOnClickListener {
             isExpanded = !isExpanded
             jobTitleContent.visibility = if (isExpanded) View.VISIBLE else View.GONE
 
+            if (isExpanded) {
+                jobTitleHeader.setBackgroundResource(R.drawable.rounded_expandable_bg)
+                jobTitleText.setTextColor(resources.getColor(android.R.color.white, null))
+                jobTitleArrow.setColorFilter(resources.getColor(android.R.color.white, null))
+            } else {
+                jobTitleHeader.setBackgroundResource(R.drawable.job_title_header_bg)
+                jobTitleText.setTextColor(resources.getColor(R.color.primary, null))
+                jobTitleArrow.setColorFilter(resources.getColor(R.color.primary, null))
+            }
+
             val targetRotation = if (isExpanded) 90f else 0f
             jobTitleArrow.animate()
                 .rotation(targetRotation)
-                .setDuration(200)  // duration in milliseconds
+                .setDuration(200)
                 .start()
         }
-
 
         setupSearchListener()
 
