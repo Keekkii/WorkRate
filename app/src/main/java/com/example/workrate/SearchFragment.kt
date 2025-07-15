@@ -1,117 +1,105 @@
 package com.example.workrate
 
-import android.graphics.Color
+import com.example.workrate.JobTitleAdapter
 import android.os.Bundle
-import android.transition.AutoTransition
-import android.transition.TransitionManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.widget.AppCompatCheckBox
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import com.example.workrate.data.AppDatabase
+import com.example.workrate.data.JobTitleDao
+import kotlinx.coroutines.*
+
 
 class SearchFragment : Fragment() {
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var searchInput: EditText
+    private lateinit var jobTitleAdapter: JobTitleAdapter
+
+    private lateinit var db: AppDatabase
+    private lateinit var jobTitleDao: JobTitleDao
+
+    private var searchJob: Job? = null
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
-        // Button at bottom
-        val createJobButton = view.findViewById<Button>(R.id.btn_create_job_notification)
-        createJobButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Create Job Notification clicked!", Toast.LENGTH_SHORT).show()
+        recyclerView = view.findViewById(R.id.job_title_recycler)
+        searchInput = view.findViewById(R.id.job_search_input)
+
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        jobTitleAdapter = JobTitleAdapter()
+        recyclerView.adapter = jobTitleAdapter
+
+        db = Room.databaseBuilder(
+            requireContext(),
+            AppDatabase::class.java,
+            "app_database"
+        ).build()
+        jobTitleDao = db.jobTitleDao()
+
+        // Setup expand/collapse functionality for header
+        val jobTitleHeader = view.findViewById<View>(R.id.job_title_header)
+        val jobTitleContent = view.findViewById<View>(R.id.job_title_content)
+        val jobTitleArrow = view.findViewById<ImageView>(R.id.job_title_arrow)
+
+        var isExpanded = false
+        jobTitleHeader.setOnClickListener {
+            isExpanded = !isExpanded
+            jobTitleContent.visibility = if (isExpanded) View.VISIBLE else View.GONE
+
+            val targetRotation = if (isExpanded) 90f else 0f
+            jobTitleArrow.animate()
+                .rotation(targetRotation)
+                .setDuration(200)  // duration in milliseconds
+                .start()
         }
 
-        // Job Title filter (with style change)
-        setupFilterToggleStyled(
-            view,
-            R.id.filter_job_title,
-            R.id.job_title_header,
-            R.id.job_title_content,
-            R.id.job_title_arrow,
-            R.id.job_title_text
-        )
 
-        // Other filters (simple toggle, no style change)
-        setupFilterToggle(view, R.id.filter_location, R.id.location_header, R.id.location_content, R.id.location_arrow)
-        // ... other filters here ...
-
-        // Force set checkbox drawable for ALL checkboxes inside job_title_content
-        val jobTitleContent = view.findViewById<LinearLayout>(R.id.job_title_content)
-        setCustomCheckboxDrawables(jobTitleContent)
+        setupSearchListener()
 
         return view
     }
 
-    // Recursively find all AppCompatCheckBox children and set button drawable & tint
-    private fun setCustomCheckboxDrawables(parent: ViewGroup) {
-        for (i in 0 until parent.childCount) {
-            val child = parent.getChildAt(i)
-            if (child is AppCompatCheckBox) {
-                // Set your selector drawable programmatically
-                child.buttonDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.checkbox_selector)
-                // Remove any button tint to avoid tint override
-                child.buttonTintList = null
-            } else if (child is ViewGroup) {
-                // Recursive call if the child is also a ViewGroup
-                setCustomCheckboxDrawables(child)
+    private fun setupSearchListener() {
+        searchInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchJob?.cancel()
+
+                val query = s?.toString()?.trim() ?: ""
+
+                if (query.isEmpty()) {
+                    // Clear results when search is empty
+                    jobTitleAdapter.setFullList(emptyList())
+                } else {
+                    // Launch coroutine to search DB
+                    searchJob = coroutineScope.launch {
+                        val results = withContext(Dispatchers.IO) {
+                            jobTitleDao.searchJobTitles(query, limit = 50, offset = 0)
+                        }
+                        jobTitleAdapter.setFullList(results)
+                    }
+                }
             }
-        }
+        })
     }
 
-    // For Job Title: style-changing toggle
-    private fun setupFilterToggleStyled(
-        rootView: View,
-        filterLayoutId: Int,
-        headerId: Int,
-        contentId: Int,
-        arrowId: Int,
-        headerTextId: Int
-    ) {
-        val filterLayout = rootView.findViewById<LinearLayout>(filterLayoutId)
-        val header = rootView.findViewById<LinearLayout>(headerId)
-        val content = rootView.findViewById<LinearLayout>(contentId)
-        val arrow = rootView.findViewById<ImageView>(arrowId)
-        val headerText = rootView.findViewById<TextView>(headerTextId)
-
-        header.setOnClickListener {
-            TransitionManager.beginDelayedTransition(filterLayout, AutoTransition())
-            val isVisible = content.visibility == View.VISIBLE
-            content.visibility = if (isVisible) View.GONE else View.VISIBLE
-            arrow.animate().rotation(if (isVisible) 0f else 90f).setDuration(200).start()
-            header.isSelected = !isVisible
-            val colorExpanded = Color.WHITE
-            val colorCollapsed = Color.parseColor("#1156AC")
-            headerText.setTextColor(if (!isVisible) colorExpanded else colorCollapsed)
-            arrow.setColorFilter(if (!isVisible) colorExpanded else colorCollapsed)
-        }
-    }
-
-    // For all other filters: simple toggle
-    private fun setupFilterToggle(
-        rootView: View,
-        filterLayoutId: Int,
-        headerId: Int,
-        contentId: Int,
-        arrowId: Int
-    ) {
-        val filterLayout = rootView.findViewById<LinearLayout>(filterLayoutId)
-        val header = rootView.findViewById<LinearLayout>(headerId)
-        val content = rootView.findViewById<LinearLayout>(contentId)
-        val arrow = rootView.findViewById<ImageView>(arrowId)
-
-        header.setOnClickListener {
-            TransitionManager.beginDelayedTransition(filterLayout, AutoTransition())
-            val isVisible = content.visibility == View.VISIBLE
-            content.visibility = if (isVisible) View.GONE else View.VISIBLE
-            arrow.animate().rotation(if (isVisible) 0f else 90f).setDuration(200).start()
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        coroutineScope.cancel() // Cancel coroutines to avoid leaks
     }
 }

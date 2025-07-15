@@ -66,7 +66,7 @@
 
 
     <!-- Scrollable content (below search bar, above button) -->
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -83,7 +83,6 @@
 
 
             <!-- Reusable expandable filter block -->
-            <!-- JOB TITLE FILTER BLOCK -->
             <LinearLayout
                 android:id="@+id/filter_job_title"
                 android:layout_width="match_parent"
@@ -92,7 +91,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp">
 
-                <!-- Header (always visible) -->
+                <!-- Header -->
                 <LinearLayout
                     android:id="@+id/job_title_header"
                     android:layout_width="match_parent"
@@ -123,7 +122,7 @@
                         app:tint="#1156AC" />
                 </LinearLayout>
 
-                <!-- Expandable content (hidden by default, white rounded background) -->
+                <!-- Expandable content -->
                 <LinearLayout
                     android:id="@+id/job_title_content"
                     android:layout_width="match_parent"
@@ -140,25 +139,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Search..."
-                        android:background="@android:drawable/edit_text"
                         android:padding="8dp"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="8dp" />
 
-                    <!-- Job title checkboxes with white square inside -->
-                    <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/job_title_checkbox"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/job_title_recycler"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="C 130 pilot instructor"
-                        android:textColor="@color/white"
-                        android:background="@android:color/transparent"
-                        app:buttonCompat="@drawable/checkbox_selector"
-                        android:buttonTint="@null" />
+                        android:layout_height="200dp"
+                        android:nestedScrollingEnabled="true"
+                        android:overScrollMode="ifContentScrolls"
+                        android:clipToPadding="false"
+                        android:paddingBottom="8dp" />
 
-
-                    <!-- Add more CheckBoxes as needed -->
                 </LinearLayout>
             </LinearLayout>
+
+
+
+
 
 
 
@@ -884,7 +882,7 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
     <Button
         android:id="@+id/btn_create_job_notification"
         android:layout_width="match_parent"
