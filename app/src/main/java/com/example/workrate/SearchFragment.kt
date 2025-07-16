@@ -34,6 +34,7 @@ class SearchFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
+        // RecyclerView and search
         recyclerView = view.findViewById(R.id.job_title_recycler)
         searchInput = view.findViewById(R.id.job_search_input)
 
@@ -41,6 +42,7 @@ class SearchFragment : Fragment() {
         jobTitleAdapter = JobTitleAdapter()
         recyclerView.adapter = jobTitleAdapter
 
+        // Room database setup
         db = Room.databaseBuilder(
             requireContext(),
             AppDatabase::class.java,
@@ -48,18 +50,18 @@ class SearchFragment : Fragment() {
         ).build()
         jobTitleDao = db.jobTitleDao()
 
-        // Setup expand/collapse functionality for header
+        // Job Title expand/collapse setup
         val jobTitleHeader = view.findViewById<View>(R.id.job_title_header)
         val jobTitleContent = view.findViewById<View>(R.id.job_title_content)
         val jobTitleArrow = view.findViewById<ImageView>(R.id.job_title_arrow)
         val jobTitleText = view.findViewById<TextView>(R.id.job_title_text)
 
-        var isExpanded = false
+        var isJobTitleExpanded = false
         jobTitleHeader.setOnClickListener {
-            isExpanded = !isExpanded
-            jobTitleContent.visibility = if (isExpanded) View.VISIBLE else View.GONE
+            isJobTitleExpanded = !isJobTitleExpanded
+            jobTitleContent.visibility = if (isJobTitleExpanded) View.VISIBLE else View.GONE
 
-            if (isExpanded) {
+            if (isJobTitleExpanded) {
                 jobTitleHeader.setBackgroundResource(R.drawable.rounded_expandable_bg)
                 jobTitleText.setTextColor(resources.getColor(android.R.color.white, null))
                 jobTitleArrow.setColorFilter(resources.getColor(android.R.color.white, null))
@@ -69,11 +71,36 @@ class SearchFragment : Fragment() {
                 jobTitleArrow.setColorFilter(resources.getColor(R.color.primary, null))
             }
 
-            val targetRotation = if (isExpanded) 90f else 0f
+            val targetRotation = if (isJobTitleExpanded) 90f else 0f
             jobTitleArrow.animate()
                 .rotation(targetRotation)
                 .setDuration(200)
                 .start()
+        }
+
+        // LOCATION expand/collapse setup
+        val locationHeader = view.findViewById<View>(R.id.location_header)
+        val locationContent = view.findViewById<View>(R.id.location_content)
+        val locationArrow = view.findViewById<ImageView>(R.id.location_arrow)
+        val locationText = view.findViewById<TextView>(R.id.location_text) // Ensure this ID is in your XML
+
+        var isLocationExpanded = false
+        locationHeader.setOnClickListener {
+            isLocationExpanded = !isLocationExpanded
+            locationContent.visibility = if (isLocationExpanded) View.VISIBLE else View.GONE
+
+            if (isLocationExpanded) {
+                locationHeader.setBackgroundResource(R.drawable.rounded_expandable_bg)
+                locationText.setTextColor(resources.getColor(android.R.color.white, null))
+                locationArrow.setColorFilter(resources.getColor(android.R.color.white, null))
+            } else {
+                locationHeader.setBackgroundResource(R.drawable.job_title_header_bg)
+                locationText.setTextColor(resources.getColor(R.color.primary, null))
+                locationArrow.setColorFilter(resources.getColor(R.color.primary, null))
+            }
+
+            val rotation = if (isLocationExpanded) 90f else 0f
+            locationArrow.animate().rotation(rotation).setDuration(200).start()
         }
 
         setupSearchListener()
@@ -92,10 +119,8 @@ class SearchFragment : Fragment() {
                 val query = s?.toString()?.trim() ?: ""
 
                 if (query.isEmpty()) {
-                    // Clear results when search is empty
                     jobTitleAdapter.setFullList(emptyList())
                 } else {
-                    // Launch coroutine to search DB
                     searchJob = coroutineScope.launch {
                         val results = withContext(Dispatchers.IO) {
                             jobTitleDao.searchJobTitles(query, limit = 50, offset = 0)

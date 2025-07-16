@@ -167,23 +167,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginTop="5dp"
-                android:paddingTop="8dp">
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
+                <!-- Header -->
                 <LinearLayout
                     android:id="@+id/location_header"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="56dp"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:background="@drawable/job_title_header_bg"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
 
                     <TextView
+                        android:id="@+id/location_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="LOCATION:"
                         android:textStyle="bold"
-                        android:textColor="#2B3F6C"
+                        android:textColor="#1156AC"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -191,23 +198,46 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/arrow_right"
-                        app:tint="#2B3F6C" />
+                        app:tint="#1156AC" />
                 </LinearLayout>
 
+                <!-- Expandable content -->
                 <LinearLayout
                     android:id="@+id/location_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@drawable/rounded_expandable_bg"
                     android:visibility="gone"
-                    android:paddingTop="8dp">
+                    android:padding="12dp"
+                    android:elevation="2dp"
+                    android:layout_marginTop="8dp">
 
                     <EditText
+                        android:id="@+id/location_search_input"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Enter location..." />
+                        android:hint="Search location..."
+                        android:padding="8dp"
+                        android:background="@drawable/rounded_edittext_bg"
+                        android:layout_marginBottom="8dp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/location_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:nestedScrollingEnabled="true"
+                        android:overScrollMode="ifContentScrolls"
+                        android:clipToPadding="false"
+                        android:paddingBottom="8dp" />
                 </LinearLayout>
             </LinearLayout>
+
+
+
+
+
+
 
             <!-- EMPLOYMENT TYPE -->
             <LinearLayout
